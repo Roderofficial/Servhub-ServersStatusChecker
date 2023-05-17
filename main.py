@@ -1,14 +1,26 @@
 import games.source_eniges as se
+import games.minecraft as mc
 import json
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from fastapi import FastAPI
+
+app = FastAPI()
+
+games = {
+    "minecraft_java": mc.MinecraftJava,
+    "csgo": se.SourcesEngines,
+    "css": se.SourcesEngines,
+    "cs16": se.SourcesEngines,
+}
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    info = se.SourcesEngines("1.1.1.1","27015").getInfo()
+@app.get("/status", tags=["status"])
+async def root(ip: str, port: str = None, game: str = None):
+    if game is None:
+        return {"error": "game is not specified"}
+    if game not in games:
+        return {"error": "game is not supported"}
+
+    game = games[game](ip, port)
+    return game.getInfo()
 
 
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
