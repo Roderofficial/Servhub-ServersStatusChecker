@@ -12,19 +12,20 @@ class MinecraftJava:
         self.port = port  # Port of the server
         self.data = {
             "response_status": 0,  # 0 = ERROR, 1 = SIMPLE, 2 = FULL
-            "app_name": "minecraft_java",  # Name of the application
-            "hostname": None,  # Hostname of the server
-            "motd": None,  # Message of the day
             "ip": self.ip,  # IP address of the server
             "port": self.port,  # Port of the server
             "players": None,  # Number of players online
             "max_players": None,  # Maximum number of players
-            "version": None,  # Version of the server
-            "ping": None,  # Ping of the server
-            "plugins": None,  # List of plugins
-            "map": None,  # Map of the server
-            "favicon": None,  # Favicon of the server
-            "extra": None  # Extra information
+
+            "extra": {
+                "version": None,  # Version of the server
+                "ping": None,  # Ping of the server
+                "plugins": None,  # List of plugins
+                "map": None,  # Map of the server
+                "favicon": None,  # Favicon of the server
+                "hostname": None,  # Hostname of the server
+                "motd": None,  # Message of the day
+            } # Extra information
         }
 
 
@@ -47,12 +48,12 @@ class MinecraftJava:
             status = server.status().raw
 
             self.data["response_status"] = 1
-            self.data['version'] = status['version']['name'] if 'version' in status else None
-            self.data['motd'] = status['description']['text'] if 'description' in status else None
+            self.data['extra']['version'] = status['version']['name'] if 'version' in status else None
+            self.data['extra']['motd'] = status['description']['text'] if 'description' in status else None
             self.data['players'] = status['players']['online'] if 'players' in status else None
             self.data['max_players'] = status['players']['max'] if 'players' in status else None
-            self.data['ping'] = int(round(server.ping(),0))
-            self.data['favicon'] = status['favicon'] if 'favicon' in status else None
+            self.data['extra']['ping'] = int(round(server.ping(),0))
+            self.data['extra']['favicon'] = status['favicon'] if 'favicon' in status else None
 
 
 
@@ -64,9 +65,9 @@ class MinecraftJava:
 
             query = server.query().raw
             self.data["response_status"] = 2
-            self.data['hostname'] = query['hostname'] if 'hostname' in query else None
-            self.data['map'] = query['map'] if 'map' in query else None
-            self.data['plugins'] = query['plugins'] if 'plugins' in query else None
+            self.data['extra']['hostname'] = query['hostname'] if 'hostname' in query else None
+            self.data['extra']['map'] = query['map'] if 'map' in query else None
+            self.data['extra']['plugins'] = query['plugins'] if 'plugins' in query else None
 
         except Exception as e:
             print(e, "Error while getting the server query")
