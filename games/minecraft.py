@@ -16,6 +16,7 @@ class MinecraftJava:
             "port": self.port,  # Port of the server
             "players": None,  # Number of players online
             "max_players": None,  # Maximum number of players
+            "name": None,
 
             "extra": {
                 "version": None,  # Version of the server
@@ -24,7 +25,6 @@ class MinecraftJava:
                 "map": None,  # Map of the server
                 "favicon": None,  # Favicon of the server
                 "hostname": None,  # Hostname of the server
-                "motd": None,  # Message of the day
             } # Extra information
         }
 
@@ -49,7 +49,7 @@ class MinecraftJava:
 
             self.data["response_status"] = 1
             self.data['extra']['version'] = status['version']['name'] if 'version' in status else None
-            self.data['extra']['motd'] = status['description']['text'] if 'description' in status else None
+            self.data['name']= status['description']['text'] if 'description' in status else None
             self.data['players'] = status['players']['online'] if 'players' in status else None
             self.data['max_players'] = status['players']['max'] if 'players' in status else None
             self.data['extra']['ping'] = int(round(server.ping(),0))
@@ -59,7 +59,7 @@ class MinecraftJava:
 
         except Exception as e:
             print(e, "Error while getting the server status")
-            return None
+            return self.data
 
         try:
 
