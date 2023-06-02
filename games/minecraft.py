@@ -14,8 +14,8 @@ class MinecraftJava:
             "response_status": 0,  # 0 = ERROR, 1 = SIMPLE, 2 = FULL
             "ip": self.ip,  # IP address of the server
             "port": self.port,  # Port of the server
-            "players": None,  # Number of players online
-            "max_players": None,  # Maximum number of players
+            "players": 0,  # Number of players online
+            "max_players": 0,  # Maximum number of players
             "name": None,
 
             "extra": {
@@ -46,10 +46,11 @@ class MinecraftJava:
 
         try:
             status = server.status().raw
+            print(status)
 
             self.data["response_status"] = 1
             self.data['extra']['version'] = status['version']['name'] if 'version' in status else None
-            self.data['name']= status['description']['text'] if 'description' in status else None
+            self.data['name']= self.getDescription(status['description']) if 'description' in status else None
             self.data['players'] = status['players']['online'] if 'players' in status else None
             self.data['max_players'] = status['players']['max'] if 'players' in status else None
             self.data['extra']['ping'] = int(round(server.ping(),0))
@@ -73,3 +74,16 @@ class MinecraftJava:
             print(e, "Error while getting the server query")
 
         return self.data
+
+
+    def getDescription(self, description):
+        print(description)
+        if(description['text']):
+            return description['text']
+
+        if(description['extra']):
+            text = ""
+            for i in description['extra']:
+                text += i['text']
+
+            return text

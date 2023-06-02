@@ -2,6 +2,7 @@ import games.source_eniges as se
 import games.minecraft as mc
 import json
 from fastapi import FastAPI
+import uvicorn
 
 app = FastAPI()
 
@@ -25,3 +26,5 @@ async def root(ip: str, port: str = None, game: str = None):
 
 
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)
