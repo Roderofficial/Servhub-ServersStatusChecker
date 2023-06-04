@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+import re
 
 import mcstatus
 
@@ -73,13 +74,27 @@ class MinecraftJava:
         except Exception as e:
             print(e, "Error while getting the server query")
 
+
         return self.data
+
+
+    def filterDescription(self, description):
+        print(description)
+        description = re.sub(r'§.', '', description)
+        # regex remove multiple spaces and newlines
+        description = re.sub(r'[\n\r\s]+', ' ', description)
+        #remove multiple spaces
+        description = re.sub(r' +', ' ', description)
+
+        return description
 
 
     def getDescription(self, description):
         print(description)
+        if(type(description) == str):
+            return self.filterDescription(description)
         if(description['text']):
-            return description['text']
+            return self.filterDescription(description['text'])
 
         if(description['extra']):
             text = ""
@@ -87,3 +102,4 @@ class MinecraftJava:
                 text += i['text']
 
             return text
+
