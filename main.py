@@ -25,6 +25,3 @@ async def root(ip: str, port: str = None, game: str = None):
     return game.getInfo()
 
 
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
